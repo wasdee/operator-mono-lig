@@ -331,7 +331,7 @@ const patchCharStrings = (dom, ligatures) => {
 const patchCharStringSubrs = (glyphDom, node, fingerprints, subrs, gsubrs) => {
   // check for callsubr/callgsubr
 
-  const lines = node.childNodes[0].textContent.split(os.EOL);
+  const lines = node.childNodes[0].textContent.split(/\r|\r\n|\n/g);
   const newLines = [];
   lines.forEach(line => {
     if (line.trim().length === 0) return;
@@ -394,10 +394,10 @@ const serialize = dom =>
     if (node.nodeType === NodeType.TEXT_NODE) {
       if (regExWhitespace.test(node.data)) return null;
       const data = node.data
-        .split('\r\n')
+        .split(/\r|\r\n|\n/g)
         .filter(s => /\S+/.test(s))
         .map(s => s.replace(/^\s+/g, ''))
-        .join('\n');
+        .join(os.EOL);
 
       return node.ownerDocument.createTextNode(data);
     }
